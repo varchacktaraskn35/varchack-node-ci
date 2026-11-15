@@ -31,8 +31,10 @@ jobs:
           if-no-files-found: error
 
       - name: Decode SSH key
+        env:
+          SSH_KEY_B64: ${{ secrets.EC2_SSH_KEY_B64 }}
         run: |
-          echo "${{ secrets.EC2_SSH_KEY_B64 }}" | base64 -d > ec2-key.pem
+          printf '%s' "$SSH_KEY_B64" | tr -d '[:space:]' | base64 -d > ec2-key.pem
           chmod 600 ec2-key.pem
 
       - name: Copy files to EC2
